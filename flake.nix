@@ -13,44 +13,16 @@
       system: let
         pkgs = import nixpkgs {inherit system;};
 
-        # go-migrate-pg = pkgs.go-migrate.overrideAttrs (oldAttrs: {
-        #   tags = ["postgres"];
-        # });
-
-        # swag = pkgs.buildGoModule rec {
-        #   pname = "swag";
-        #   version = "v2.0.0-rc4";
-
-        #   src = pkgs.fetchFromGitHub {
-        #     owner = "swaggo";
-        #     repo = "swag";
-        #     rev = version;
-        #     sha256 = "sha256-3dX01PAVEkn8ciVNbIn1IwiSkwogPJLYNo6xTg9jhDA=";
-        #   };
-
-        #   vendorHash = "sha256-bUMW9wjPIT3JLMw9F/NvWqZv1M62o/Y4gIpp6XyHbek=";
-        #   subPackages = ["cmd/swag"];
-        # };
-
         app = pkgs.buildGoModule {
-          pname = "go-app";
-          version = "0.1.0";
+          pname = "deploys-cli";
+          version = "1.1.0";
 
           src = ./.;
 
-          vendorHash = "sha256-jx70HhXLbBt63Vt0iZK8aUwoQnpe57MIjUMzXsnaRgA=";
-
-          nativeBuildInputs = [
-            # swag
-          ];
-
-          preBuild = ''
-            # Generate Swagger docs
-            # swag init -v3.1 -o docs -g main.go --parseDependency --parseInternal
-          '';
+          vendorHash = "sha256-S5nq6DK4356LCMYKX3anjcySAxZhGxFWu1qKXR44C94=";
 
           meta = with pkgs.lib; {
-            description = "Go application with Swagger documentation";
+            description = "Deploys.app CLI";
             license = licenses.mit;
           };
         };
@@ -62,16 +34,11 @@
 
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
-            go_1_25
+            go_1_24
             gopls
             golangci-lint
 
             air
-            # swag
-
-            # sqlc
-            # go-migrate-pg
-            # sql-formatter
 
             pre-commit
           ];
@@ -79,7 +46,6 @@
           shellHook = ''
             echo "Go development environment ready"
             echo "Go version: $(go version)"
-            # echo "Swag version: $(swag --version)"
           '';
         };
       }
